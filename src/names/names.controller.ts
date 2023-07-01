@@ -7,24 +7,29 @@ import {
   Body,
   Param,
   ParseIntPipe,
+  UseFilters,
 } from '@nestjs/common';
 import { NamesService } from './names.service';
-import { IName, IRank } from '../utils/types';
+import { IName, IRank } from '../types/names.type';
+import { HttpExceptionFilter } from '../filters/HttpException.filter';
 
 @Controller('names')
 export class NamesController {
   constructor(private namesService: NamesService) {}
 
+  @UseFilters(HttpExceptionFilter)
   @Get()
   getNames() {
     return this.namesService.getNames();
   }
 
+  @UseFilters(HttpExceptionFilter)
   @Post()
   createName(@Body() name: IName) {
     return this.namesService.createName(name);
   }
 
+  @UseFilters(HttpExceptionFilter)
   @Put(':id')
   async updateNameById(
     @Param('id', ParseIntPipe) id: number,
@@ -33,6 +38,7 @@ export class NamesController {
     await this.namesService.updateName(id, body);
   }
 
+  @UseFilters(HttpExceptionFilter)
   @Delete(':id')
   async deleteNameById(@Param('id', ParseIntPipe) id: number) {
     await this.namesService.deleteName(id);

@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Name } from '../typeorm/Names.entity';
-import { IName, IRank } from '../utils/types';
+import { IName, IRank } from '../types/names.type';
 
 @Injectable()
 export class NamesService {
