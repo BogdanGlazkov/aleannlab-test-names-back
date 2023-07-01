@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Name } from '../typeorm/Names.entity';
-import { IName } from '../utils/types';
+import { IName, IRank } from '../utils/types';
 
 @Injectable()
 export class NamesService {
@@ -10,10 +10,25 @@ export class NamesService {
     @InjectRepository(Name) private nameRepository: Repository<Name>,
   ) {}
 
-  getNames() {}
+  getNames() {
+    return this.nameRepository.find();
+  }
 
-  createName(name: IName) {
-    const newName = this.nameRepository.create({ ...name, rank: 1 });
+  async createName(name: IName) {
+    const allNames = await this.nameRepository.find();
+
+    const newName = this.nameRepository.create({
+      ...name,
+      rank: allNames.length + 1,
+    });
     return this.nameRepository.save(newName);
+  }
+
+  updateName(id: number, body: IRank) {
+    return this.nameRepository.update({ id }, { ...body });
+  }
+
+  deleteName(id: number) {
+    return this.nameRepository.delete({ id });
   }
 }
