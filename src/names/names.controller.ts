@@ -8,6 +8,8 @@ import {
   Param,
   ParseIntPipe,
   UseFilters,
+  HttpException,
+  HttpStatus,
 } from '@nestjs/common';
 import { NamesService } from './names.service';
 import { IName, IRank } from '../types/names.type';
@@ -25,7 +27,10 @@ export class NamesController {
 
   @UseFilters(HttpExceptionFilter)
   @Post()
-  createName(@Body() name: IName) {
+  async createName(@Body() name: IName) {
+    const isExist = await this.namesService.getNameByName(name);
+    if (isExist)
+      throw new HttpException('Name is already exist', HttpStatus.CONFLICT);
     return this.namesService.createName(name);
   }
 

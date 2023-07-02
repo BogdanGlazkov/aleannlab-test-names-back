@@ -14,6 +14,10 @@ export class NamesService {
     return this.nameRepository.find();
   }
 
+  getNameByName(name: IName) {
+    return this.nameRepository.findOneBy(name);
+  }
+
   async createName(name: IName) {
     const allNames = await this.nameRepository.find();
 
