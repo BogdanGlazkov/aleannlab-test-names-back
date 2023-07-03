@@ -46,6 +46,15 @@ export class NamesController {
   @UseFilters(HttpExceptionFilter)
   @Delete(':id')
   async deleteNameById(@Param('id', ParseIntPipe) id: number) {
+    const nameToDelete = await this.namesService.getNameById(id);
+
     await this.namesService.deleteName(id);
+    const names = await this.namesService.getNames();
+    names.forEach(async (item) => {
+      if (item.rank >= nameToDelete.rank) {
+        const body = { ...item, rank: item.rank - 1 };
+        await this.namesService.updateName(item.id, body);
+      }
+    });
   }
 }

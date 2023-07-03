@@ -14,6 +14,10 @@ export class NamesService {
     return this.nameRepository.find();
   }
 
+  getNameById(id: number) {
+    return this.nameRepository.findOneBy({ id });
+  }
+
   getNameByName(name: IName) {
     return this.nameRepository.findOneBy(name);
   }
