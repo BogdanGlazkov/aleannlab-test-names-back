@@ -50,11 +50,17 @@ export class NamesController {
 
     await this.namesService.deleteName(id);
     const names = await this.namesService.getNames();
+    const updatedNames = [];
+
     names.forEach(async (item) => {
       if (item.rank >= nameToDelete.rank) {
         const body = { ...item, rank: item.rank - 1 };
-        await this.namesService.updateName(item.id, body);
+        updatedNames.push(body);
       }
     });
+
+    await Promise.all(
+      updatedNames.map((el) => this.namesService.updateName(el.id, el)),
+    );
   }
 }
